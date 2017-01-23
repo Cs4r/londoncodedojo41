@@ -8,18 +8,25 @@ import org.scalatest._
   */
 class GameTest extends FreeSpec with Matchers {
 
+  def state(room: Room, arrows: Int = 5): GameRunning =
+    GameRunning(arrows, room)
 
   "checkRooom" - {
     "Free should return Continue" in {
-      Game.checkRoom(Empty) shouldEqual Continue
+      checkRoom(state(Empty)) shouldEqual state(Empty)
     }
 
     "WumpusInside should return GameOver" in {
-      Game.checkRoom(WumpusInside) shouldEqual GameOver
+      checkRoom(state(WumpusInside)) shouldEqual GameOver
     }
 
-    "BottomLesPit should return GameOver" in {
-      Game.checkRoom(BottomLessPit) shouldEqual GameOver
+    "BottomlessPit should return GameOver" in {
+      checkRoom(state(BottomLessPit)) shouldEqual GameOver
+    }
+
+    "RoomWithArrow should return Continue with +1 arrow" in {
+      checkRoom(state(ArrowInside)) shouldEqual GameRunning(arrows = 6, room = Empty)
+      Game.checkRoom(state(ArrowInside, arrows = 4)) shouldEqual GameRunning(arrows = 5, room = Empty)
     }
   }
 }
